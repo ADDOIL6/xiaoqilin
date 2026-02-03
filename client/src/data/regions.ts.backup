@@ -1,0 +1,315 @@
+// 国家地区数据结构 - 完全参考租房君的筛选逻辑
+
+export interface City {
+  name: string;
+  nameEn: string;
+}
+
+export interface State {
+  name: string;
+  nameEn: string;
+  cities: City[];
+}
+
+export interface Country {
+  code: string;
+  name: string;
+  nameEn: string;
+  hotCities?: City[]; // 热门城市（英国、美国、加拿大有）
+  cities?: City[]; // 平铺城市列表（英国、澳洲、新加坡使用）
+  states?: State[]; // 州/省分组（美国、加拿大使用）
+}
+
+// 英国数据
+const ukHotCities: City[] = [
+  { name: '伦敦', nameEn: 'London' },
+  { name: '布里斯托', nameEn: 'Bristol' },
+  { name: '格拉斯哥', nameEn: 'Glasgow' },
+  { name: '曼彻斯特', nameEn: 'Manchester' },
+  { name: '伯明翰', nameEn: 'Birmingham' },
+  { name: '杜伦', nameEn: 'Durham' },
+  { name: '爱丁堡', nameEn: 'Edinburgh' },
+  { name: '南安普敦', nameEn: 'Southampton' },
+  { name: '利兹', nameEn: 'Leeds' },
+  { name: '卡迪夫', nameEn: 'Cardiff' },
+];
+
+const ukAllCities: City[] = [
+  { name: '爱丁堡', nameEn: 'Edinburgh' },
+  { name: '埃克塞特', nameEn: 'Exeter' },
+  { name: '埃格姆', nameEn: 'Egham' },
+  { name: '阿伯丁', nameEn: 'Aberdeen' },
+  { name: '伯明翰', nameEn: 'Birmingham' },
+  { name: '布里斯托', nameEn: 'Bristol' },
+  { name: '伯恩茅斯', nameEn: 'Bournemouth' },
+  { name: '北安普敦', nameEn: 'Northampton' },
+  { name: '巴斯', nameEn: 'Bath' },
+  { name: '布拉德福德', nameEn: 'Bradford' },
+  { name: '布莱顿与霍夫', nameEn: 'Brighton and Hove' },
+  { name: '班戈', nameEn: 'Bangor' },
+  { name: '贝尔法斯特', nameEn: 'Belfast' },
+  { name: '邓迪', nameEn: 'Dundee' },
+  { name: '杜伦', nameEn: 'Durham' },
+  { name: '德比', nameEn: 'Derby' },
+  { name: '格拉斯哥', nameEn: 'Glasgow' },
+  { name: '哈德斯菲尔德', nameEn: 'Huddersfield' },
+  { name: '哈罗盖特', nameEn: 'Harrogate' },
+  { name: '哈特菲尔德', nameEn: 'Hatfield' },
+  { name: '赫尔', nameEn: 'Hull' },
+  { name: '剑桥', nameEn: 'Cambridge' },
+  { name: '吉尔福德', nameEn: 'Guildford' },
+  { name: '金斯顿', nameEn: 'Kingston' },
+  { name: '卡迪夫', nameEn: 'Cardiff' },
+  { name: '考文垂', nameEn: 'Coventry' },
+  { name: '坎特伯雷', nameEn: 'Canterbury' },
+  { name: '科尔切斯特', nameEn: 'Colchester' },
+  { name: '伦敦', nameEn: 'London' },
+  { name: '利物浦', nameEn: 'Liverpool' },
+  { name: '利兹', nameEn: 'Leeds' },
+  { name: '莱斯特', nameEn: 'Leicester' },
+  { name: '拉夫堡', nameEn: 'Loughborough' },
+  { name: '兰卡斯特', nameEn: 'Lancaster' },
+  { name: '雷丁', nameEn: 'Reading' },
+  { name: '林肯', nameEn: 'Lincoln' },
+  { name: '雷克斯汉姆', nameEn: 'Wrexham' },
+  { name: '曼彻斯特', nameEn: 'Manchester' },
+  { name: '米德尔斯堡', nameEn: 'Middlesbrough' },
+  { name: '诺丁汉', nameEn: 'Nottingham' },
+  { name: '南安普敦', nameEn: 'Southampton' },
+  { name: '纽卡斯尔', nameEn: 'Newcastle' },
+  { name: '牛津', nameEn: 'Oxford' },
+  { name: '诺里奇', nameEn: 'Norwich' },
+  { name: '普雷斯顿', nameEn: 'Preston' },
+  { name: '普利茅斯', nameEn: 'Plymouth' },
+  { name: '朴茨茅斯', nameEn: 'Portsmouth' },
+  { name: '切斯特', nameEn: 'Chester' },
+  { name: '圣安德鲁斯', nameEn: 'St Andrews' },
+  { name: '斯旺西', nameEn: 'Swansea' },
+  { name: '斯特林', nameEn: 'Stirling' },
+  { name: '桑德兰', nameEn: 'Sunderland' },
+  { name: '索尔福德', nameEn: 'Salford' },
+  { name: '斯托克', nameEn: 'Stoke' },
+  { name: '伍尔弗汉普顿', nameEn: 'Wolverhampton' },
+  { name: '温彻斯特', nameEn: 'Winchester' },
+  { name: '谢菲尔德', nameEn: 'Sheffield' },
+  { name: '约克', nameEn: 'York' },
+  { name: '伊普斯维奇', nameEn: 'Ipswich' },
+];
+
+// 美国数据
+const usHotCities: City[] = [
+  { name: '纽约', nameEn: 'New York' },
+  { name: '洛杉矶', nameEn: 'Los Angeles' },
+  { name: '波士顿', nameEn: 'Boston' },
+  { name: '芝加哥', nameEn: 'Chicago' },
+  { name: '香槟', nameEn: 'Champaign' },
+  { name: '费城', nameEn: 'Philadelphia' },
+  { name: '华盛顿特区', nameEn: 'Washington D.C.' },
+  { name: '伯克利', nameEn: 'Berkeley' },
+  { name: '戴维斯', nameEn: 'Davis' },
+  { name: '旧金山', nameEn: 'San Francisco' },
+];
+
+const usStates: State[] = [
+  {
+    name: '加利福尼亚州',
+    nameEn: 'California',
+    cities: [
+      { name: '伯克利', nameEn: 'Berkeley' },
+      { name: '戴维斯', nameEn: 'Davis' },
+      { name: '尔湾', nameEn: 'Irvine' },
+      { name: '河滨', nameEn: 'Riverside' },
+      { name: '旧金山', nameEn: 'San Francisco' },
+      { name: '洛杉矶', nameEn: 'Los Angeles' },
+      { name: '圣地亚哥', nameEn: 'San Diego' },
+      { name: '圣何塞', nameEn: 'San Jose' },
+    ],
+  },
+  {
+    name: '马萨诸塞州',
+    nameEn: 'Massachusetts',
+    cities: [
+      { name: '波士顿', nameEn: 'Boston' },
+      { name: '剑桥', nameEn: 'Cambridge' },
+      { name: '伍斯特', nameEn: 'Worcester' },
+    ],
+  },
+  {
+    name: '纽约州',
+    nameEn: 'New York',
+    cities: [
+      { name: '纽约', nameEn: 'New York' },
+      { name: '布法罗', nameEn: 'Buffalo' },
+      { name: '罗切斯特', nameEn: 'Rochester' },
+    ],
+  },
+  {
+    name: '伊利诺伊州',
+    nameEn: 'Illinois',
+    cities: [
+      { name: '芝加哥', nameEn: 'Chicago' },
+      { name: '香槟', nameEn: 'Champaign' },
+    ],
+  },
+  {
+    name: '宾夕法尼亚州',
+    nameEn: 'Pennsylvania',
+    cities: [
+      { name: '费城', nameEn: 'Philadelphia' },
+      { name: '匹兹堡', nameEn: 'Pittsburgh' },
+      { name: '斯泰特科利奇', nameEn: 'State College' },
+    ],
+  },
+  {
+    name: '德克萨斯州',
+    nameEn: 'Texas',
+    cities: [
+      { name: '奥斯汀', nameEn: 'Austin' },
+      { name: '达拉斯', nameEn: 'Dallas' },
+      { name: '休斯敦', nameEn: 'Houston' },
+    ],
+  },
+  {
+    name: '华盛顿州',
+    nameEn: 'Washington',
+    cities: [
+      { name: '西雅图', nameEn: 'Seattle' },
+      { name: '斯波坎', nameEn: 'Spokane' },
+    ],
+  },
+  {
+    name: '华盛顿特区',
+    nameEn: 'Washington D.C.',
+    cities: [
+      { name: '华盛顿特区', nameEn: 'Washington D.C.' },
+    ],
+  },
+];
+
+// 加拿大数据（主要留学城市）
+const canadaHotCities: City[] = [
+  { name: '多伦多', nameEn: 'Toronto' },
+  { name: '温哥华', nameEn: 'Vancouver' },
+  { name: '蒙特利尔', nameEn: 'Montreal' },
+  { name: '渥太华', nameEn: 'Ottawa' },
+  { name: '卡尔加里', nameEn: 'Calgary' },
+  { name: '埃德蒙顿', nameEn: 'Edmonton' },
+  { name: '滑铁卢', nameEn: 'Waterloo' },
+  { name: '维多利亚', nameEn: 'Victoria' },
+];
+
+const canadaProvinces: State[] = [
+  {
+    name: '安大略省',
+    nameEn: 'Ontario',
+    cities: [
+      { name: '多伦多', nameEn: 'Toronto' },
+      { name: '渥太华', nameEn: 'Ottawa' },
+      { name: '滑铁卢', nameEn: 'Waterloo' },
+      { name: '伦敦', nameEn: 'London' },
+      { name: '金斯顿', nameEn: 'Kingston' },
+      { name: '汉密尔顿', nameEn: 'Hamilton' },
+    ],
+  },
+  {
+    name: '不列颠哥伦比亚省',
+    nameEn: 'British Columbia',
+    cities: [
+      { name: '温哥华', nameEn: 'Vancouver' },
+      { name: '维多利亚', nameEn: 'Victoria' },
+      { name: '本拿比', nameEn: 'Burnaby' },
+    ],
+  },
+  {
+    name: '魁北克省',
+    nameEn: 'Quebec',
+    cities: [
+      { name: '蒙特利尔', nameEn: 'Montreal' },
+      { name: '魁北克市', nameEn: 'Quebec City' },
+    ],
+  },
+  {
+    name: '艾伯塔省',
+    nameEn: 'Alberta',
+    cities: [
+      { name: '卡尔加里', nameEn: 'Calgary' },
+      { name: '埃德蒙顿', nameEn: 'Edmonton' },
+    ],
+  },
+];
+
+// 澳洲数据
+const australiaAllCities: City[] = [
+  { name: '阿德莱德', nameEn: 'Adelaide' },
+  { name: '布里斯班', nameEn: 'Brisbane' },
+  { name: '珀斯', nameEn: 'Perth' },
+  { name: '黄金海岸', nameEn: 'Gold Coast' },
+  { name: '堪培拉', nameEn: 'Canberra' },
+  { name: '墨尔本', nameEn: 'Melbourne' },
+  { name: '悉尼', nameEn: 'Sydney' },
+];
+
+// 新加坡数据
+const singaporeAllCities: City[] = [
+  { name: '新加坡', nameEn: 'Singapore' },
+];
+
+// 导出所有国家数据
+export const countries: Country[] = [
+  {
+    code: 'UK',
+    name: '英国',
+    nameEn: 'United Kingdom',
+    hotCities: ukHotCities,
+    cities: ukAllCities,
+  },
+  {
+    code: 'US',
+    name: '美国',
+    nameEn: 'United States',
+    hotCities: usHotCities,
+    states: usStates,
+  },
+  {
+    code: 'CA',
+    name: '加拿大',
+    nameEn: 'Canada',
+    hotCities: canadaHotCities,
+    states: canadaProvinces,
+  },
+  {
+    code: 'AU',
+    name: '澳洲',
+    nameEn: 'Australia',
+    cities: australiaAllCities,
+  },
+  {
+    code: 'SG',
+    name: '新加坡',
+    nameEn: 'Singapore',
+    cities: singaporeAllCities,
+  },
+];
+
+// 获取字母索引
+export function getAlphabetIndex(cities: City[]): string[] {
+  const firstLetters = new Set<string>();
+  cities.forEach(city => {
+    const firstLetter = city.nameEn.charAt(0).toUpperCase();
+    firstLetters.add(firstLetter);
+  });
+  return Array.from(firstLetters).sort();
+}
+
+// 按字母分组城市
+export function groupCitiesByAlphabet(cities: City[]): Record<string, City[]> {
+  const grouped: Record<string, City[]> = {};
+  cities.forEach(city => {
+    const firstLetter = city.nameEn.charAt(0).toUpperCase();
+    if (!grouped[firstLetter]) {
+      grouped[firstLetter] = [];
+    }
+    grouped[firstLetter].push(city);
+  });
+  return grouped;
+}

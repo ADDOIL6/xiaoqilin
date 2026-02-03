@@ -1,0 +1,15 @@
+name = "xiaoqilin-api"
+main = "api.js"
+compatibility_date = "2024-01-01"
+
+# KV命名空间绑定
+[[kv_namespaces]]
+binding = "LISTINGS_KV"
+id = "YOUR_LISTINGS_KV_ID"
+
+[[kv_namespaces]]
+binding = "VIEW_COUNT_KV"
+id = "YOUR_VIEW_COUNT_KV_ID"
+
+# 路由配置（部署后会自动生成workers.dev域名）
+# 也可以绑定到自定义域名
