@@ -17,6 +17,9 @@ import RentalRequestDetail from "./pages/RentalRequestDetail";
 import Marketplace from "./pages/Marketplace";
 import Articles from "./pages/Articles";
 import Reviews from "./pages/Reviews";
+import AdminLogin from "./pages/admin/Login";
+import AdminDashboard from "./pages/admin/Dashboard";
+
 
 function Router() {
   return (
@@ -34,11 +37,14 @@ function Router() {
       <Route path="/marketplace" component={Marketplace} />
       <Route path="/articles" component={Articles} />
       <Route path="/reviews" component={Reviews} />
+      <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
   );
 }
+
 
 function App() {
   return (
@@ -52,5 +58,6 @@ function App() {
     </ErrorBoundary>
   );
 }
+
 
 export default App;
